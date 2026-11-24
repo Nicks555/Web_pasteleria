@@ -10,7 +10,7 @@ $(function () {
   'use strict';
 
   var RECARGO = 5;
-  var WHATSAPP_NUMERO = '59178805695'; // Cambia por tu número (código país + número, sin +)
+  var WHATSAPP_NUMERO = '59165183550'; // Cambia por tu número (código país + número, sin +)
   var STORAGE_KEY = 'mdb-estado-v1';
   var reducido = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   if (reducido) { $.fx.off = true; }
