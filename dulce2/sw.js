@@ -1,7 +1,7 @@
 // Mi Dulce Bendición - Service Worker (Offline-First)
 // Sube el número de versión (v3 -> v4) cada vez que cambies archivos o imágenes locales.
 const PREFIJO = 'dulcebendicion-';
-const CACHE = PREFIJO + 'v6';
+const CACHE = PREFIJO + 'v7';
 const ASSETS = [
   './',
   './index.html',
