@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mi Dulce Bendición: cupcakes, tortas, galletas y alfajores artesanales. Reserva por WhatsApp.">
+<title>Mi Dulce Bendición – Pastelería Artesanal</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e83e8c">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<!-- Librerías con defer: no bloquean el render y se ejecutan en orden antes de script.js -->
+<script defer src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script defer src="script.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Pacifico&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#fff5f9;--panel:#fff;--pink:#e83e8c;--pink-dark:#c8236e;--pink-soft:#ffe6f0;--cream:#fff9fc;--berry:#5c1838;--muted:#7a5c6b;--line:#f6d5e4;--input-border:#ecc3d6;--summary-bg:#fff9fc;--danger-bg:#fdeaea;--danger:#c62828;--pending:#b45309;--nav-h:56px;--bottom-nav-h:58px;--shadow:0 6px 20px rgba(232,62,140,.10)}
+body.dark-mode{color-scheme:dark;--bg:#181016;--panel:#241720;--pink:#ff5ca4;--pink-dark:#e03b84;--pink-soft:#3a2031;--cream:#1e131b;--berry:#ffe6f1;--muted:#c7a6b6;--line:#3c2535;--input-border:#4d2f44;--summary-bg:#1e131b;--danger-bg:rgba(198,40,40,.24);--pending:#fbbf24;--shadow:0 6px 20px rgba(0,0,0,.45)}
+body,.panel,.card-item,.menu,.modal,.chip,.size-btn,.tab,.cart__summary,.modal input,.toast,.ci__qty button,.modal__close,.navbar,.btn--add,.bottom-nav,.filter-dropdown-btn,.carousel-arrow,.hero-box{transition:background-color .22s ease,color .22s ease,border-color .22s ease}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Open Sans',sans-serif;color:var(--berry);background:linear-gradient(180deg,#ffeef5 0%,var(--bg) 55%,#fff9fc 100%);display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;width:100%;overflow-x:hidden}
+body.dark-mode{background:var(--bg)}
+h1,h2,h3{font-family:'Montserrat',sans-serif}
+.brand-script{font-family:'Pacifico',cursive;font-weight:400;color:var(--pink)}
+button{font:inherit;cursor:pointer;border:0}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.section-hidden{display:none!important}
+
+/* ===== NAVBAR ===== */
+.navbar{flex:none;height:var(--nav-h);background:var(--panel);color:var(--berry);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:120}
+.navbar__left,.navbar__right{display:flex;align-items:center;gap:10px}
+.navbar__right{gap:6px}
+.icon-btn{background:var(--pink-soft);color:var(--pink);font-size:1.2rem;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:var(--pink);color:#fff}
+.brand{display:flex;align-items:center;gap:7px;color:var(--berry);text-decoration:none}
+.brand__name{font-size:1.08rem;line-height:1.1}
+.cart-btn{position:relative;background:var(--pink);color:#fff;font-size:1.15rem;width:40px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center}
+.cart-btn:hover{background:var(--pink-dark)}
+.badge{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;padding:0 4px;background:#ff9f1c;color:#2b111e;font:800 .7rem/19px 'Montserrat',sans-serif;border-radius:10px;text-align:center}
+.badge--bump{animation:bump .35s}
+@keyframes bump{50%{transform:scale(1.3)}}
+.menu{display:none;position:absolute;top:calc(var(--nav-h) - 4px);left:16px;width:215px;padding:8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 28px rgba(92,24,56,.2);z-index:150}
+.menu a{display:block;padding:8px 12px;border-radius:9px;color:var(--berry);text-decoration:none;font-weight:600;font-size:.88rem}
+.menu a:hover{background:var(--pink-soft);color:var(--pink-dark)}
+
+/* ===== INICIO ===== */
+.hero-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 16px}
+.hero-box{width:100%;max-width:1040px;padding:20px 24px;border-radius:20px;background:linear-gradient(105deg,rgba(255,244,249,.96) 0%,rgba(255,232,242,.91) 58%,rgba(255,214,232,.80) 100%),url('https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=1200&q=70') center/cover no-repeat;border:1px solid var(--line);box-shadow:var(--shadow);display:grid;grid-template-columns:1.35fr .65fr;gap:18px;align-items:center}
+body.dark-mode .hero-box{background:linear-gradient(105deg,rgba(36,23,32,.96) 0%,rgba(48,25,41,.92) 60%,rgba(62,28,51,.84) 100%),url('https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=1200&q=70') center/cover no-repeat}
+.hero__eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pink-dark);margin-bottom:5px}
+.hero__title{font-size:1.7rem;line-height:1.15;font-weight:800;color:var(--berry);margin-bottom:7px}
+.hero__title span{color:var(--pink)}
+.hero__sub{font-size:.86rem;color:var(--muted);max-width:560px;margin-bottom:12px}
+.hero__actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.btn-hero-primary{background:var(--pink);color:#fff;padding:9px 17px;border-radius:999px;font-size:.84rem;font-weight:700}
+.btn-hero-primary:hover{background:var(--pink-dark)}
+.btn-hero-secondary{background:var(--panel);color:var(--berry);border:1.5px solid var(--line);padding:9px 15px;border-radius:999px;font-size:.82rem;font-weight:700}
+.btn-hero-secondary:hover{border-color:var(--pink);color:var(--pink)}
+.hero__pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pillar{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.80);padding:7px 10px;border-radius:12px;border:1px solid var(--line)}
+body.dark-mode .pillar{background:rgba(24,16,22,.68)}
+.pillar__num{font:800 .95rem 'Montserrat',sans-serif;color:var(--pink)}
+.pillar__txt{font-size:.73rem;line-height:1.2;font-weight:600;color:var(--berry)}
+.hero__card{background:rgba(255,255,255,.84);border:1px solid var(--line);border-radius:16px;padding:15px}
+body.dark-mode .hero__card{background:rgba(24,16,22,.74)}
+.hero__card-tag{font-size:.68rem;font-weight:800;letter-spacing:.08em;color:var(--pink-dark);text-transform:uppercase}
+.hero__card-quote{font-size:.96rem;font-weight:800;line-height:1.28;margin:5px 0 9px}
+.hero__perks{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;font-size:.74rem;font-weight:600;color:var(--muted)}
+
+/* ===== DASHBOARD ===== */
+.dashboard{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 325px;grid-template-rows:minmax(0,1fr);gap:12px;padding:10px 16px 12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.catalog__head{flex:none;padding:10px 14px 8px;border-bottom:1px solid var(--line);position:relative;z-index:30;background:var(--panel)}
+.catalog__head-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
+.catalog__head h1,.catalog__head h2{font-size:1.02rem;margin:0}
+.catalog__sub{font-size:.78rem;color:var(--muted)}
+.catalog__head-actions{display:flex;align-items:center;gap:6px}
+.filter-menu-wrapper{position:relative;z-index:35}
+.filter-dropdown-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:var(--pink-soft);color:var(--berry);border:1.5px solid var(--line);font-weight:700;font-size:.78rem}
+.filter-dropdown-btn:hover{border-color:var(--pink)}
+.filter-dropdown-btn__arrow{display:inline-block;transition:transform .2s ease}
+.filter-dropdown-btn[aria-expanded="true"] .filter-dropdown-btn__arrow{transform:rotate(180deg)}
+.chips{display:none;flex-wrap:wrap;align-items:center;gap:5px;margin-top:7px;padding:8px 10px;background:var(--summary-bg);border:1px solid var(--line);border-radius:12px;position:relative;z-index:40}
+.chips.open{display:flex}
+.chip{padding:4px 11px;border-radius:999px;background:var(--pink-soft);color:var(--berry);font-weight:700;font-size:.75rem;border:1.5px solid transparent}
+.chip:hover{border-color:var(--pink)}
+.chip.active{background:var(--pink);color:#fff}
+.chip--offer.active{background:#ff9f1c;color:#2b111e}
+.catalog__body{flex:1;min-height:0;padding:10px 8px 10px 14px;position:relative;z-index:1;overflow:hidden;display:flex;align-items:stretch}
+
+/* PC: cuadrícula de 3 columnas con scroll vertical. Celular: carrusel horizontal con flechas (ver @media) */
+.grid{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;gap:12px;overflow-y:auto;overflow-x:hidden;padding-right:8px;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--pink) transparent}
+.grid::-webkit-scrollbar{width:8px}
+.grid::-webkit-scrollbar-thumb{background:var(--pink);border-radius:8px}
+.grid::-webkit-scrollbar-track{background:transparent}
+.grid .card-item{min-width:0;border-radius:14px;border:1px solid var(--line);background:var(--cream);padding:8px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.card-item__media{position:relative}
+.tarjeta-ods__imagen{width:100%;height:120px;object-fit:cover;display:block;cursor:zoom-in;border-radius:10px;background:var(--pink-soft)}
+.card-item__body{display:flex;flex-direction:column;flex:1}
+.card-item__titulo{font-size:.85rem;font-weight:800;margin-top:5px;color:var(--berry);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-item__estado{font-size:.7rem;color:var(--pink-dark);font-weight:700;margin:1px 0 4px}
+.sizes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
+.size-btn{padding:2px 7px;border-radius:999px;background:var(--panel);border:1.5px solid var(--line);font-size:.7rem;font-weight:700;color:var(--muted)}
+.size-btn.active{border-color:var(--pink);color:#fff;background:var(--pink)}
+.card-item__footer{display:flex;flex-direction:column;gap:4px;margin-top:auto}
+.card-item__price{display:flex;align-items:baseline;gap:5px}
+.price{font:800 .94rem 'Montserrat',sans-serif;color:var(--berry)}
+.price-old{color:var(--muted);font-size:.72rem}
+.empty{grid-column:1/-1;width:100%;text-align:center;color:var(--muted);padding:24px 0}
+.carousel-arrow{display:none;position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:32px;height:32px;border-radius:50%;background:rgba(232,62,140,.88);border:2px solid #fff;color:#fff;font-size:1.35rem;line-height:1;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(92,24,56,.22)}
+.carousel-arrow--prev{left:6px}
+.carousel-arrow--next{right:6px}
+.carousel-arrow:hover:not(.is-disabled){background:var(--pink-dark)}
+.carousel-arrow.is-disabled{opacity:.32;pointer-events:none}
+.tag-offer{position:absolute;top:6px;left:6px;background:#ff9f1c;color:#2b111e;font:800 .62rem 'Montserrat',sans-serif;padding:2px 7px;border-radius:999px}
+
+.btn{border-radius:999px;padding:6px 9px;font-weight:700;font-size:.75rem;transition:background .2s,transform .1s}
+.btn:active{transform:translateY(1px)}
+.btn--add{background:var(--pink);color:#fff;width:100%}
+.btn--add:hover{background:var(--pink-dark)}
+.btn--add--done{background:#16a34a;color:#fff}
+.btn--back{background:var(--pink-soft);color:var(--berry);border:1px solid var(--line);padding:4px 10px;font-size:.74rem}
+.btn--back:hover{border-color:var(--pink);color:var(--pink-dark)}
+.btn--pay{width:100%;background:var(--pink);color:#fff;font-size:.88rem;padding:9px;box-shadow:0 4px 12px rgba(232,62,140,.28)}
+.btn--pay:hover:not(:disabled){background:var(--pink-dark)}
+.btn--pay:disabled{background:#e8bfd1;box-shadow:none;cursor:not-allowed}
+.btn--ghost{width:100%;margin-top:5px;background:transparent;color:var(--muted);border:1px solid var(--line);padding:5px 9px;font-size:.74rem}
+.btn--ghost:hover:not(:disabled){border-color:var(--danger);color:var(--danger);background:var(--danger-bg)}
+.btn--ghost:disabled{opacity:.5;cursor:not-allowed}
+.tarjeta-ods__boton--destacado{background:var(--pink);color:#fff;border-bottom:3px solid var(--pink-dark)}
+
+/* ===== GALERÍA ===== */
+.gallery-scroll{flex:1;min-height:0;overflow-y:auto;padding:10px 14px 14px}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gallery-card{background:var(--cream);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.gallery-card__img{width:100%;height:130px;object-fit:cover;display:block;cursor:zoom-in;background:var(--pink-soft)}
+.gallery-card__caption{padding:7px 9px;font-size:.75rem;font-weight:700;color:var(--berry);line-height:1.25}
+
+/* ===== PANEL LATERAL ===== */
+.tabs{flex:none;display:flex;border-bottom:1px solid var(--line);background:var(--cream)}
+.tab{flex:1;padding:9px 6px;background:transparent;color:var(--muted);font:700 .76rem 'Montserrat',sans-serif;border-bottom:3px solid transparent}
+.tab:hover{color:var(--berry)}
+.tab.active{color:var(--pink-dark);border-bottom-color:var(--pink);background:var(--panel)}
+.cart__close{display:none;flex:none;width:38px;background:transparent;color:var(--muted);font-size:1rem}
+.tab-pane{display:none;flex:1;min-height:0;flex-direction:column}
+.tab-pane.active{display:flex}
+.log-item{padding:8px 0;border-bottom:1px solid var(--line);display:grid;gap:2px}
+.log__top{display:flex;justify-content:space-between;align-items:baseline}
+.log__id{font:800 .82rem 'Montserrat',sans-serif}
+.log__date{font-size:.7rem;color:var(--muted)}
+.log__items{font-size:.76rem}
+.log__bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 8px;margin-top:2px}
+.log__actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px}
+.log__ask{font-size:.72rem;font-weight:600}
+.btn-cancel-res,.btn-cancel-yes,.btn-cancel-no{padding:3px 8px;border-radius:8px;font-size:.7rem;font-weight:700;background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn-cancel-res:hover,.btn-cancel-yes{border-color:var(--danger);color:var(--danger)}
+.btn-cancel-yes:hover{background:var(--danger-bg)}
+.btn-cancel-no:hover{border-color:var(--berry);color:var(--berry)}
+.log-item--cancelled .log__items,.log-item--cancelled .log__total{text-decoration:line-through;opacity:.6}
+.log-item--cancelled .log__state{color:var(--danger)}
+.log__branch{font-size:.72rem;color:var(--muted)}
+.log__total{font:800 .84rem 'Montserrat',sans-serif;color:var(--pink-dark)}
+.log__state{font-size:.7rem;font-weight:700;color:var(--pending)}
+.cart__list{flex:1;overflow-y:auto;list-style:none;padding:6px 14px}
+.cart__empty{color:var(--muted);text-align:center;padding:20px 0;font-size:.82rem}
+.cart-item{display:grid;grid-template-columns:1fr auto;gap:3px 8px;padding:7px 0;border-bottom:1px solid var(--line)}
+.ci__name{font-weight:700;font-size:.8rem}
+.ci__size{font-size:.7rem;color:var(--muted)}
+.ci__qty{display:flex;align-items:center;gap:4px}
+.ci__qty button{width:22px;height:22px;border-radius:6px;background:var(--pink-soft);color:var(--berry);font-weight:800}
+.ci__qty button:hover:not(:disabled){background:var(--pink);color:#fff}
+.ci__qty button:disabled{opacity:.4;cursor:not-allowed}
+.ci__qty .qty{min-width:22px;text-align:center;font-weight:700;font-size:.78rem}
+.ci__side{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.ci__sub{font-family:'Montserrat',sans-serif;font-size:.78rem}
+.ci__del{background:transparent;font-size:.76rem;padding:2px;border-radius:6px}
+.ci__del:hover{background:var(--danger-bg)}
+.cart__summary{flex:none;padding:9px 14px 11px;border-top:1px solid var(--line);background:var(--summary-bg)}
+.row{display:flex;justify-content:space-between;margin-bottom:3px;color:var(--muted);font-size:.76rem}
+.row--total{color:var(--berry);font:800 .9rem 'Montserrat',sans-serif;margin:5px 0 8px}
+.row--total span:last-child{color:var(--pink-dark);font-size:1.06rem}
+.cart--pulse{animation:pulse .8s}
+@keyframes pulse{40%{box-shadow:0 0 0 4px var(--pink)}}
+
+/* ===== MODALES ===== */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:300;overflow-y:auto;padding:20px;background:rgba(43,17,30,.65)}
+.modal{position:relative;max-width:450px;margin:5vh auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.modal h2{font-size:1.2rem}
+.modal__close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--pink-soft);color:var(--berry)}
+.modal__total{margin:6px 0 14px;color:var(--muted);font-size:.9rem}
+.modal__total strong{color:var(--pink-dark);font:1.05rem 'Montserrat',sans-serif;font-weight:800}
+.modal label:not(.radio),.modal legend{display:block;font-weight:700;font-size:.84rem;margin-top:11px}
+.modal input[type=text],.modal input[type=date],.modal select{width:100%;margin-top:5px;padding:10px 12px;border:1.5px solid var(--input-border);background:var(--cream);color:var(--berry);border-radius:10px;font:inherit}
+.modal input.invalid,.modal select.invalid{border-color:var(--danger)}
+.error-msg{display:block;min-height:16px;margin-top:3px;font-size:.76rem;color:var(--danger)}
+.modal fieldset{border:0;margin-bottom:14px}
+.radio{display:inline-flex;align-items:center;gap:5px;margin:6px 14px 0 0;cursor:pointer;font-size:.84rem}
+.radio input{accent-color:var(--pink)}
+.lightbox-modal{max-width:720px;padding:18px;text-align:center}
+.lightbox-modal img{max-width:100%;max-height:72vh;width:auto;height:auto;object-fit:contain;margin:10px auto;display:block;border-radius:12px}
+.lightbox-caption{font-size:.9rem;font-weight:700;color:var(--berry)}
+.toast{display:none;position:fixed;top:66px;right:18px;z-index:400;max-width:340px;padding:12px 18px;border-radius:12px;background:var(--berry);color:var(--panel);font-weight:600;font-size:.85rem;border-left:5px solid var(--pink);box-shadow:0 10px 26px rgba(43,17,30,.28)}
+.toast--error{border-left-color:#ff9f1c}
+.bottom-nav{display:none}
+
+@media (max-width:1024px){
+body{padding-bottom:var(--bottom-nav-h)}
+#btnMenu,#menuDropdown,#btnCart{display:none!important}
+.hero-screen{padding:12px}
+.hero-box{padding:16px;grid-template-columns:1fr;gap:10px;border-radius:18px}
+.hero__title{font-size:1.35rem}
+.hero__pillars{gap:6px}
+.pillar{flex-direction:column;align-items:flex-start;gap:2px;padding:6px 8px}
+.hero__card{display:none}
+.dashboard{display:flex;flex-direction:column;padding:10px 12px;gap:0}
+.panel{overflow:visible}
+.catalog__head{padding:10px 12px 8px;border-radius:18px 18px 0 0}
+.catalog__head h1,.catalog__head h2{font-size:.94rem}
+.catalog__body{padding:10px 34px;border-radius:0 0 18px 18px;align-items:center}
+.grid{display:flex;flex-direction:row;gap:10px;overflow-x:auto;overflow-y:hidden;padding-right:0;scrollbar-width:none;-ms-overflow-style:none}
+.grid::-webkit-scrollbar{display:none}
+.grid .card-item{flex:0 0 calc(50% - 5px);min-width:calc(50% - 5px)}
+.carousel-arrow{display:inline-flex}
+.tarjeta-ods__imagen{height:78px}
+.carousel-arrow{width:28px;height:28px;font-size:1.15rem}
+.carousel-arrow--prev{left:4px}
+.carousel-arrow--next{right:4px}
+.gallery-scroll{max-height:62vh}
+.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gallery-card__img{height:80px}
+.cart{overflow:hidden;position:fixed;top:var(--nav-h);right:0;bottom:var(--bottom-nav-h);width:min(360px,100%);z-index:130;border-radius:16px 0 0 16px;transform:translateX(105%);visibility:hidden;transition:transform .3s ease,visibility 0s .3s;box-shadow:-8px 0 28px rgba(43,17,30,.28)}
+.cart.open{transform:translateX(0);visibility:visible;transition:transform .3s ease}
+.cart__close{display:block}
+.toast{top:64px;left:12px;right:12px;max-width:none}
+.bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;height:var(--bottom-nav-h);background:var(--panel);border-top:1px solid var(--line);z-index:140;padding:4px 6px}
+.bottom-nav__btn{position:relative;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.66rem;font-weight:700;border-radius:10px}
+.bottom-nav__btn.active{color:var(--pink-dark);background:var(--pink-soft)}
+.bottom-nav__badge{position:absolute;top:2px;right:14%;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#ff9f1c;color:#2b111e;font:800 .65rem/17px 'Montserrat',sans-serif}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<!-- 1. NAVBAR -->
+<header class="navbar">
+  <div class="navbar__left">
+    <button id="btnMenu" class="icon-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="menuDropdown">☰</button>
+    <a class="brand" href="#" data-action="inicio">
+      <span aria-hidden="true" style="font-size:1.25rem">🧁</span>
+      <span class="brand__name"><span class="brand-script">Mi Dulce Bendición</span></span>
+    </a>
+  </div>
+  <div class="navbar__right">
+    <button id="btnTheme" class="icon-btn" aria-label="Cambiar a modo oscuro" aria-pressed="false">🌙</button>
+    <button id="btnCart" class="cart-btn" aria-label="Ir al carrito">🛒<span id="cartBadge" class="badge">0</span></button>
+  </div>
+  <nav id="menuDropdown" class="menu" aria-label="Menú principal">
+    <a href="#" data-action="inicio">Inicio</a>
+    <a href="#" data-action="catalogo">Catálogo de Dulces</a>
+    <a href="#" data-action="ofertas">🔥 Ofertas</a>
+    <a href="#" data-action="galeria">Galería Dulce</a>
+    <a href="#" data-action="reservas">Mis Reservas</a>
+    <a href="#" data-action="contacto">Contacto</a>
+  </nav>
+</header>
+
+<!-- IMÁGENES DE PRODUCTOS (cambia solo el src; usa fotos reales de tus productos) -->
+<template id="plantilla-imagenes-productos">
+  <img data-prod-id="1"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?auto=format&fit=crop&w=800&q=80" alt="Cupcakes Vainilla y Fresa">
+  <img data-prod-id="2"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80" alt="Torta Tres Leches Cacao">
+  <img data-prod-id="3"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80" alt="Galletas Chispas y Corazón">
+  <img data-prod-id="4"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=800&q=80" alt="Alfajores Artesanales con Manjar">
+  <img data-prod-id="5"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80" alt="Cupcakes Red Velvet">
+  <img data-prod-id="6"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80" alt="Torta Frutos del Bosque">
+  <img data-prod-id="7"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80" alt="Brownies Fudge y Nueces">
+  <img data-prod-id="8"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80" alt="Cheesecake de Fresa">
+  <img data-prod-id="9"  class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=80" alt="Donas Glaseadas Rosadas">
+  <img data-prod-id="11" class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1558326567-98ae2405596b?auto=format&fit=crop&w=800&q=80" alt="Galletas Mantequilla Decoradas">
+  <img data-prod-id="12" class="card-item__imagen tarjeta-ods__imagen" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80" alt="Copas Dulces de Chantilly y Fruta">
+  <img data-prod-id="13" class="card-item__imagen tarjeta-ods__imagen" src="https://sallysbakingaddiction.com/wp-content/uploads/2017/06/moist-chocolate-cupcakes-5.jpg" alt="Cupcakes de Chocolate Intenso">
+  <img data-prod-id="14" class="card-item__imagen tarjeta-ods__imagen" src="https://i0.wp.com/whitehenry.com.au/wp-content/uploads/2018/07/Premium-assorted-mini-cupcakes.webp?fit=729%2C729&ssl=1" alt="Mini Cupcakes Surtidos">
+  <img data-prod-id="15" class="card-item__imagen tarjeta-ods__imagen" src="https://sallysbakingaddiction.com/wp-content/uploads/2013/04/triple-chocolate-cake-4.jpg" alt="Torta de Chocolate Húmeda">
+  <img data-prod-id="16" class="card-item__imagen tarjeta-ods__imagen" src="https://cdn.prod.website-files.com/614a379840dbad1848e598c2/679906d29abceb2bbceb06b3_6799062816366d61273c52b4_IMG_1560.jpeg" alt="Torta Red Velvet con Crema">
+  <img data-prod-id="17" class="card-item__imagen tarjeta-ods__imagen" src="https://mojo.generalmills.com/api/public/content/_pLFRXFETcuXWg_Z0MhZPw_gmi_hi_res_jpeg.jpeg?v=693b292b&t=466b54bb264e48b199fc8e83ef1136b4" alt="Galletas con Chispas de Chocolate">
+  <img data-prod-id="18" class="card-item__imagen tarjeta-ods__imagen" src="https://sallysbakingaddiction.com/wp-content/uploads/2017/12/how-to-decorate-sugar-cookies.jpg" alt="Galletas Decoradas para Cumpleaños">
+  <img data-prod-id="19" class="card-item__imagen tarjeta-ods__imagen" src="https://www.encasacookingspace.com/wp-content/uploads/2021/07/Chocolate-Chips-Alfajores-Alfacookies-5.jpg" alt="Alfajores de Maicena Bañados">
+  <img data-prod-id="20" class="card-item__imagen tarjeta-ods__imagen" src="https://www.sprinkleofthis.com/wp-content/uploads/2020/03/DSC_9390.jpg" alt="Alfajores Mini Surtidos">
+  <img data-prod-id="21" class="card-item__imagen tarjeta-ods__imagen" src="https://bakewithshivesh.com/wp-content/uploads/2024/08/960E4D82-3A2F-436E-89AA-26F56A856DFE.jpg" alt="Brownies con Chispas de Chocolate">
+  <img data-prod-id="22" class="card-item__imagen tarjeta-ods__imagen" src="https://www.elmundoeats.com/wp-content/uploads/2024/06/A-portion-of-no-bake-strawberry-cheesecake.jpg" alt="Mini Cheesecakes de Frutilla">
+  <img data-prod-id="23" class="card-item__imagen tarjeta-ods__imagen" src="https://www.sainsburysmagazine.co.uk/media/4027/download/summer-berry-layer-cake-1120-2.jpg?v=1" alt="Donas Rellenas de Manjar">
+  <img data-prod-id="24" class="card-item__imagen tarjeta-ods__imagen" src="http://www.planticize.com/wp-content/uploads/2016/06/WhiteChoc_n_Berry_06_WEB.jpg" alt="Box Dulce Bendición (surtido)">
+</template>
+
+<!-- PANTALLA 1: INICIO (es un <main>; solo uno de los dos está visible a la vez) -->
+<main class="hero-screen" id="heroScreen" aria-label="Pantalla de inicio">
+  <div class="hero-box">
+    <div>
+      <p class="hero__eyebrow">Repostería artesanal · Horneo diario</p>
+      <h1 class="hero__title">Endulza tus momentos con <span>Mi Dulce Bendición</span>.</h1>
+      <p class="hero__sub">Postres y dulces hechos con amor: cupcakes esponjosos, tortas de celebración, galletas, alfajores y especialidades listas para reservar.</p>
+      <div class="hero__actions">
+        <button type="button" class="btn-hero-primary" id="btnEnterCatalog">🍰 Entrar al catálogo ›</button>
+        <button type="button" class="btn-hero-secondary" id="btnHeroOffers">🔥 Ver ofertas del día</button>
+      </div>
+      <div class="hero__pillars">
+        <div class="pillar"><span class="pillar__num">01</span><span class="pillar__txt">Calidad garantizada</span></div>
+        <div class="pillar"><span class="pillar__num">02</span><span class="pillar__txt">Hecho con amor</span></div>
+        <div class="pillar"><span class="pillar__num">03</span><span class="pillar__txt">Variedad y recojo</span></div>
+      </div>
+    </div>
+    <div class="hero__card">
+      <p class="hero__card-tag">Dulce Bendición · Hoy</p>
+      <p class="hero__card-quote">Cada detalle horneado para celebrar tus días especiales.</p>
+      <div class="hero__perks">
+        <span>🧁 24 dulces en carta</span><span>🎂 Tortas por tamaño</span>
+        <span>🍪 Galletas &amp; Alfajores</span><span>📲 Reserva por WhatsApp</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- DASHBOARD -->
+<main class="dashboard section-hidden" id="dashboardMain">
+
+  <section class="panel catalog" id="catalogPanel">
+    <div class="catalog__head">
+      <div class="catalog__head-top">
+        <h2>Nuestros Productos <span id="activeFilterLabel" class="catalog__sub">· Todos</span></h2>
+        <div class="catalog__head-actions">
+          <button type="button" class="btn btn--back" data-action="inicio">🏠 Inicio</button>
+          <button type="button" class="btn btn--back" data-action="galeria">✨ Galería</button>
+        </div>
+      </div>
+      <div class="filter-menu-wrapper">
+        <button type="button" id="btnToggleFilters" class="filter-dropdown-btn" aria-expanded="false" aria-controls="filters">
+          <span>🍰 Filtros</span><span class="filter-dropdown-btn__arrow" aria-hidden="true">▾</span>
+        </button>
+        <div id="filters" class="chips" role="group" aria-label="Filtrar por categoría">
+          <button type="button" class="chip active" data-cat="Todos">Todos</button>
+          <button type="button" class="chip chip--offer" data-cat="Ofertas">🔥 Ofertas</button>
+          <button type="button" class="chip" data-cat="Cupcakes">Cupcakes</button>
+          <button type="button" class="chip" data-cat="Tortas">Tortas</button>
+          <button type="button" class="chip" data-cat="Galletas">Galletas</button>
+          <button type="button" class="chip" data-cat="Alfajores">Alfajores</button>
+          <button type="button" class="chip" data-cat="Especiales">Especiales</button>
+        </div>
+      </div>
+    </div>
+    <div class="catalog__body" id="catalogBody">
+      <button type="button" id="btnSlidePrev" class="carousel-arrow carousel-arrow--prev" aria-label="Producto anterior">‹</button>
+      <div id="productGrid" class="grid"></div>
+      <button type="button" id="btnSlideNext" class="carousel-arrow carousel-arrow--next" aria-label="Siguiente producto">›</button>
+    </div>
+  </section>
+
+  <section class="panel catalog section-hidden" id="galleryPanel" aria-label="Galería de creaciones dulces">
+    <div class="catalog__head">
+      <div class="catalog__head-top">
+        <div>
+          <h2>Galería Dulce</h2>
+          <p class="catalog__sub">Fotos referenciales; el acabado de cada pedido puede variar.</p>
+        </div>
+        <div class="catalog__head-actions">
+          <button type="button" class="btn btn--back" data-action="inicio">🏠 Inicio</button>
+          <button type="button" class="btn btn--back" data-action="catalogo">← Volver a Productos</button>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-scroll"><div id="galleryGrid" class="gallery-grid"></div></div>
+  </section>
+
+  <aside class="panel cart" id="cartPanel" aria-label="Panel de pedidos y reservas">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tabBtnCart" role="tab" aria-selected="true" aria-controls="tabCart" data-tab="tabCart">🛒 Pedidos</button>
+      <button class="tab" id="tabBtnLog" role="tab" aria-selected="false" aria-controls="tabLog" data-tab="tabLog">📋 Mis Reservas</button>
+      <button class="cart__close" id="btnCloseCart" aria-label="Cerrar panel">✕</button>
+    </div>
+    <section id="tabCart" class="tab-pane active" role="tabpanel" aria-labelledby="tabBtnCart">
+      <ul id="cartList" class="cart__list"></ul>
+      <div class="cart__summary">
+        <div class="row"><span>Subtotal</span><span id="subtotal">BOB 0.00</span></div>
+        <div class="row"><span>Empaque / reserva</span><span id="recargo">BOB 0.00</span></div>
+        <div class="row row--total"><span>TOTAL</span><span id="total">BOB 0.00</span></div>
+        <button id="btnCheckout" class="btn btn--pay" disabled>Proceder a Reservar</button>
+        <button id="btnClear" class="btn btn--ghost" disabled>🗑️ Vaciar pedido</button>
+      </div>
+    </section>
+    <section id="tabLog" class="tab-pane" role="tabpanel" aria-labelledby="tabBtnLog">
+      <ul id="logList" class="cart__list"></ul>
+    </section>
+  </aside>
+</main>
+
+<!-- BARRA INFERIOR (CELULAR) -->
+<nav class="bottom-nav" id="mobileBottomNav" aria-label="Navegación inferior móvil">
+  <button type="button" class="bottom-nav__btn active" data-bnav="inicio"><span>🏠</span><span>Inicio</span></button>
+  <button type="button" class="bottom-nav__btn" data-bnav="catalogo"><span>🧁</span><span>Dulces</span></button>
+  <button type="button" class="bottom-nav__btn" data-bnav="galeria"><span>✨</span><span>Galería</span></button>
+  <button type="button" class="bottom-nav__btn" data-bnav="carrito"><span>🛒</span><span>Pedidos</span><span id="bottomCartBadge" class="bottom-nav__badge">0</span></button>
+  <button type="button" class="bottom-nav__btn" data-bnav="reservas"><span>📋</span><span>Reservas</span></button>
+</nav>
+
+<!-- MODAL DE RESERVA -->
+<div id="checkoutModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <button type="button" id="btnCloseModal" class="modal__close" aria-label="Cerrar">✕</button>
+    <h2 id="modalTitle">Confirmar reserva dulce</h2>
+    <p class="modal__total">Total a pagar: <strong id="modalTotal">BOB 0.00</strong></p>
+    <form id="checkoutForm" novalidate>
+      <label for="fName">Nombre de la persona</label>
+      <input id="fName" type="text" autocomplete="name" placeholder="Ej. Camila Mamani">
+      <span class="error-msg" aria-live="polite"></span>
+      <label for="fPhone">Celular de contacto (máx. 8 dígitos)</label>
+      <input id="fPhone" type="text" inputmode="numeric" autocomplete="tel" maxlength="8" placeholder="Ej. 71234567">
+      <span class="error-msg" aria-live="polite"></span>
+      <label for="fBranch">Sucursal de recojo</label>
+      <select id="fBranch">
+        <option value="">Selecciona una sucursal</option>
+        <option value="Sucursal Centro">Sucursal Centro (Av. 16 de Julio)</option>
+        <option value="Sucursal Sopocachi">Sucursal Sopocachi (Plaza Abaroa)</option>
+        <option value="Sucursal Zona Sur">Sucursal Zona Sur (Calacoto, Calle 21)</option>
+        <option value="Sucursal Miraflores">Sucursal Miraflores (Plaza Villarroel)</option>
+      </select>
+      <span class="error-msg" aria-live="polite"></span>
+      <label for="fDate">Fecha de recojo</label>
+      <input id="fDate" type="date">
+      <span class="error-msg" aria-live="polite"></span>
+      <fieldset>
+        <legend>Método de pago</legend>
+        <label class="radio"><input type="radio" name="pago" value="Efectivo" checked> Efectivo</label>
+        <label class="radio"><input type="radio" name="pago" value="QR"> QR</label>
+        <label class="radio"><input type="radio" name="pago" value="Transferencia"> Transferencia</label>
+      </fieldset>
+      <button type="submit" class="btn btn--pay tarjeta-ods__boton--destacado">Confirmar y Enviar por WhatsApp</button>
+    </form>
+  </div>
+</div>
+
+<!-- VISOR DE IMAGEN -->
+<div id="lightboxModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption">
+  <div class="modal lightbox-modal">
+    <button type="button" id="btnCloseLightbox" class="modal__close" aria-label="Cerrar imagen">✕</button>
+    <img id="lightboxImg" src="" alt="">
+    <p id="lightboxCaption" class="lightbox-caption"></p>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

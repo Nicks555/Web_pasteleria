@@ -1,0 +1,37 @@
+{
+  "name": "Mi Dulce Bendición – Pastelería Artesanal",
+  "short_name": "Dulce Bendición",
+  "description": "Cupcakes, tortas, galletas y alfajores artesanales. Reserva por WhatsApp y recoge en tu sucursal.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff5f9",
+  "theme_color": "#e83e8c",
+  "lang": "es",
+  "categories": [
+    "food",
+    "shopping"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
